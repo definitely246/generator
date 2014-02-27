@@ -1,0 +1,17 @@
+<?php
+
+class %Model% extends Eloquent
+{
+	public $fillable = [
+	%each attributes%
+		'%attribute%'
+	%end%
+	];
+
+%each relationships%
+	public function %relationship%()
+	{
+		$this->%type%('%Model%');
+	}
+%end%
+}

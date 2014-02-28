@@ -3,117 +3,110 @@
 class Template
 {
 	/**
-	 * String of the template text, 
+	 * String of the template text,
 	 * this is what is used to generate
 	 * the php code.
-	 * 
+	 *
 	 * @var string
 	 */
-	protected $body;
+	protected $content;
 
 	/**
-	 * Contexts are run through an list of grammars
-	 * to generate the source code that you will 
-	 * see. It is processed in order.
-	 * 
+	 * Keeps track of the given variables
+	 * on this template.
+	 *
 	 * @var array
 	 */
-	protected $grammars = array();
-
-	/**
-	 * Keeps track of the given context
-	 * on this template
-	 * 
-	 * @var array
-	 */
-	protected $context = array();
+	protected $variables;
 
 	/**
 	 * Create a new template to work with
-	 * 
-	 * @param  [type] $template
-	 * @param  [type] $grammars
-	 * @return [type]
+	 *
+	 * @param string $content
+	 * @param array  $variables
 	 */
-	public function __construct($body, $grammars = null)
+	public function __construct($content = "", $variables = array())
 	{
-		$this->body = $body;
-
-		$this->grammars = $grammars ?: array(
-			new Grammars\TokenReplacement
-		);
+		$this->content = $content;
+		$this->setVariables($variables);
 	}
 
 	/**
-	 * Runs the context through the list of grammars
-	 * and returns a compiled template
-	 *  
-	 * @param  array $context
-	 * @return string
+	 * [getContent description]
+	 * @return [type]
 	 */
-	public function compile(array $context)
+	public function getContent()
 	{
-		$this->setContext($context);
+		return $this->content;
+	}
 
-		foreach ($this->grammars as $grammar)
+	/**
+	 * [setContent description]
+	 * @param [type] $content
+	 */
+	public function setContent($content)
+	{
+		$this->content = $content;
+	}
+
+	/**
+	 * [getVariables description]
+	 * @return [type]
+	 */
+	public function getVariables()
+	{
+		return $this->variables;
+	}
+
+	/**
+	 * [setVariables description]
+	 * @param [type] $variables
+	 */
+	public function setVariables($variables)
+	{
+		if (is_string($variables))
 		{
-			$grammar->process($this);
+			$variables = $this->parseJsonToAssociativeArray($variables);
 		}
 
-		return $this->body;
+		$this->variables = $variables;
 	}
 
 	/**
-	 * [getContext description]
-	 * @return [type]
+	 * [parseJsonToAssociativeArray description]
+	 * @param  [type] $json [description]
+	 * @return [type]       [description]
 	 */
-	public function getContext()
+	protected function parseJsonToAssociativeArray($json)
 	{
-		return $this->context;
+		$obj = json_decode($json);
+
+		if (!$obj)
+		{
+			throw new \Exception('Cannot parse this json string!');
+		}
+
+		return $this->toArray($obj);
 	}
 
 	/**
-	 * [setContext description]
-	 * @param [type] $context
+	 * [toArray description]
+	 * @param  [type] $obj [description]
+	 * @return [type]      [description]
 	 */
-	public function setContext($context)
+	protected function toArray($obj)
 	{
-		$this->context = $context;
-	}
+		$obj = (array) $obj;
 
-	/**
-	 * [getBody description]
-	 * @return [type]
-	 */
-	public function getBody()
-	{
-		return $this->body;
-	}
+		// convert underlying objects to associative arrays
+		foreach ($obj as $key => $value)
+		{
+			if (!is_string($value))
+			{
+				$obj[$key] = $this->toArray($value);
+			}
+		}
 
-	/**
-	 * [setBody description]
-	 * @param [type] $body
-	 */
-	public function setBody($body)
-	{
-		$this->body = $body;
-	}
-
-	/**
-	 * [getGrammars description]
-	 * @return [type]
-	 */
-	public function getGrammars()
-	{
-		return $this->grammars;
-	}
-
-	/**
-	 * [setGrammars description]
-	 * @param [type] $grammars
-	 */
-	public function setGrammars($grammars)
-	{
-		$this->grammars = $grammars;
+		return $obj;
 	}
 }

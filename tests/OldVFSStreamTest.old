@@ -29,18 +29,4 @@ class BaseEngineTest extends TestCase
 
         // $this->assertEquals('template', $this->engine->getTemplate());
     }
-
-    public function testCanCompileTemplate()
-    {
-        $context = array(
-            'model' => 'Foobar',
-        );
-
-        $template = new Template($this->files['template1/model.ext']);
-        $output = $template->compile($context);
-
-        var_dump($output);
-    }
-
-
 }

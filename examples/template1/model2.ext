@@ -1,0 +1,43 @@
+<?php
+
+class %Model extends Eloquent
+{
+	public $fillable = [
+		%each attributes
+		'%attribute%'
+		%end
+	];
+
+	/**
+	 * [getInstance description]
+	 *
+	 * @return [type] [description]
+	 */
+	static function find($id)
+	{
+		$%models = %Model::where('id', $id)->first();
+
+		return $%models;
+	}
+
+	/**
+	 * Returns a new instance of the model
+	 * provided here
+	 */
+	public function %model()
+	{
+		return $this->%_model;
+	}
+
+	%each relationships
+	/**
+	 * A %Relationship %type %Model
+	 *
+	 * @return %type
+	 */
+	public function %relationship()
+	{
+		$this->%type('%Model');
+	}
+	%end
+}

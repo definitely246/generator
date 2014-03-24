@@ -21,4 +21,9 @@ class FileWriterSpec extends ObjectBehavior
 
     	$this->write(array('test/thing.txt' => "content"));
     }
+
+    function it_can_handle_overriding_files(FileCreatorInterface $file)
+    {
+        $this->
+    }
 }

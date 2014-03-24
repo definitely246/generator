@@ -13,7 +13,7 @@ This is really to be used as a third-party library that mediates the workflow fo
 
 *Here is the main idea.*
 
-> If you combine **variables** + **templates** then you have created a generator.
+> If you combine **variables** + **templates** + **parser** then you have created a generator.
 
 This flowchart might help with understanding how everything all comes together.
 

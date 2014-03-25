@@ -1,10 +1,31 @@
 <?php namespace Codesleeve\Generator\Support;
 
 use RecursiveIteratorIterator, RecursiveDirectoryIterator;
-use Codesleeve\Generator\Interfaces\FileCreatorInterface;
+use Codesleeve\Generator\Interfaces\FilesystemInterface;
 
-class Filesystem extends \Symfony\Component\Filesystem\Filesystem implements FileCreatorInterface
+class Filesystem extends \Symfony\Component\Filesystem\Filesystem implements FilesystemInterface
 {
+	/**
+	 * This is the root of the file system
+	 * and can be used to inject in vfsStream for testing.
+	 *
+	 * It is also useful for having paths all relative to the
+	 * root directory
+	 *
+	 * @var [type]
+	 */
+	private $root;
+
+	/**
+	 * Create a new filesystem wrapper
+	 *
+	 * @param string $root
+	 */
+	public function __construct($root = '')
+	{
+		$this->root = $root;
+	}
+
 	/**
 	 * Open a file and return the contents
 	 *
@@ -17,9 +38,9 @@ class Filesystem extends \Symfony\Component\Filesystem\Filesystem implements Fil
 
 	/**
 	 * Create this file for us and set content
-	 * 
+	 *
 	 */
-	public function create($filename, $content)
+	public function put($filename, $content)
 	{
 		return file_put_contents($filename, $content);
 	}
@@ -33,23 +54,6 @@ class Filesystem extends \Symfony\Component\Filesystem\Filesystem implements Fil
 	public function directory($file)
 	{
 		return realpath(dirname($file));
-	}
-
-	/**
-	 * Open the file (if exists) and return
-	 * contents as JSON array
-	 *
-	 * @param   $file
-	 * @return StdClass
-	 */
-	public function openAsJsonDocument($file)
-	{
-        if (!$this->exists($file))
-        {
-            return $file;
-        }
-
-        return json_decode($this->get($file));
 	}
 
 	/**

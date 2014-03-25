@@ -5,6 +5,16 @@ Generator
 
 Checkout [sleeve.phar](https://github.com/CodeSleeve/sleeve.phar) to get started generating.
 
+Or you can manually work with the `Console\Application`
+
+```php
+	$app = new Codesleeve\Generator\Console\Application('sleeve', '1.0.0')
+
+	$app->setupGenerators(getcwd(), __DIR__);
+
+	$app->run();
+```
+
 ### How does it work?
 
 This project creates a vanilla generator setup which can be configured for any type of boilerplate generation.
@@ -17,4 +27,4 @@ This is really to be used as a third-party library that mediates the workflow fo
 
 This flowchart might help with understanding how everything all comes together.
 
-![Flowchart Diagram For How Generator Works](http://i57.tinypic.com/juc0f6.png "Generator Flowchart")
+![Flowchart Diagram For How Generator Works](http://i62.tinypic.com/3463hw2.png "Generator Flowchart")

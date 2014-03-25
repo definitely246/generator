@@ -1,4 +1,4 @@
-<?php namespace Codesleeve\Generator\Contexts;
+<?php namespace Codesleeve\Generator;
 
 use Codesleeve\Generator\Support\Transform;
 use Codesleeve\Generator\Interfaces\ContextInterface;
@@ -23,6 +23,7 @@ class EntityContext implements ContextInterface
 		$this->parameters = $parameters;
 
 		$this->entity = $parameters['entity'];
+
 		$this->fields = isset($parameters['fields']) ? $parameters['fields'] : '';
 
 		return $this->populateContext();
@@ -30,8 +31,8 @@ class EntityContext implements ContextInterface
 
 	/**
 	 * Generates all the context for an entity
-	 * 
-	 * @return 
+	 *
+	 * @return
 	 */
 	protected function populateContext()
 	{
@@ -63,7 +64,7 @@ class EntityContext implements ContextInterface
 
 	// 		if ($this->isAttribute($name, $type))
 	// 		{
-	// 			$attributes[] = compact('name', 'type', 'index');			
+	// 			$attributes[] = compact('name', 'type', 'index');
 	// 		}
 	// 	}
 
@@ -92,7 +93,7 @@ class EntityContext implements ContextInterface
 
 	// *
 	//  * Model could have hasMany relationships attached to it
-	 
+
 	// protected function hasMany()
 	// {
 	// 	$hasMany = array();

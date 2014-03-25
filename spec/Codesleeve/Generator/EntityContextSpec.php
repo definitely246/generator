@@ -1,4 +1,4 @@
-<?php namespace spec\Codesleeve\Generator\Contexts;
+<?php namespace spec\Codesleeve\Generator;
 
 use spec\ObjectBehavior;
 use Prophecy\Argument;
@@ -7,7 +7,7 @@ class EntityContextSpec extends ObjectBehavior
 {
     function it_is_initializable()
     {
-        $this->shouldHaveType('Codesleeve\Generator\Contexts\EntityContext');
+        $this->shouldHaveType('Codesleeve\Generator\EntityContext');
     }
 
     function it_can_give_me_plural_entity_names()

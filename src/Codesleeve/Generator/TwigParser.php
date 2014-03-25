@@ -1,4 +1,4 @@
-<?php namespace Codesleeve\Generator\Parsers;
+<?php namespace Codesleeve\Generator;
 
 use Twig_Environment, Twig_Loader_Array, Twig_Lexer;
 use Codesleeve\Generator\Interfaces\ParserInterface;

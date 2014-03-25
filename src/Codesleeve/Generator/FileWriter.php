@@ -1,7 +1,7 @@
-<?php namespace Codesleeve\Generator\Composers;
+<?php namespace Codesleeve\Generator;
 
 use Codesleeve\Generator\Interfaces\WriterInterface;
-use Codesleeve\Generator\Interfaces\FileCreatorInterface;
+use Codesleeve\Generator\Interfaces\FilesystemInterface;
 use Codesleeve\Generator\Support\Filesystem;
 
 class FileWriter implements WriterInterface
@@ -18,7 +18,7 @@ class FileWriter implements WriterInterface
 	 *
 	 * @param Filesystem $file
 	 */
-	public function __construct(FileCreatorInterface $file = null)
+	public function __construct(FilesystemInterface $file = null)
 	{
 		$this->file = $file ?: new Filesystem;
 	}
@@ -33,7 +33,7 @@ class FileWriter implements WriterInterface
 	{
 		foreach ($files as $filename => $content)
 		{
-			$this->file->create($filename, $content);
+			$this->file->put($filename, $content);
 		}
 	}
 }

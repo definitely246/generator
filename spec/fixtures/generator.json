@@ -1,0 +1,18 @@
+{
+	"model" : {
+		"context"	: "Codesleeve\\Generator\\EntityContext",
+		"templates"	: "templates/model",
+		"extra"		: "stuff",
+		"variables" : {
+			"Namespace" : "Acme"
+		}
+	},
+
+	"controller" : {
+		"templates"	: "templates/controller"
+	},
+
+	"scaffold" : {
+		"templates"	: "templates/scaffold"
+	}
+}

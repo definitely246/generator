@@ -9,7 +9,7 @@ class ObjectBehavior extends \PhpSpec\ObjectBehavior
      */
     public function getMatchers()
     {
-        return [
+        return array(
             'contain' => function($subject, $value) {
                 return strpos($subject, $value) !== false;
             },
@@ -19,6 +19,6 @@ class ObjectBehavior extends \PhpSpec\ObjectBehavior
             'haveKey' => function($subject, $key) {
                 return is_array($subject) && array_key_exists($key, $subject);
             }
-        ];
+        );
     }
 }

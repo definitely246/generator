@@ -33,7 +33,7 @@ class Filesystem extends \Symfony\Component\Filesystem\Filesystem implements Fil
 	 */
 	public function get($file)
 	{
-		return file_get_contents($file);
+		return file_get_contents($this->path($file));
 	}
 
 	/**
@@ -42,7 +42,7 @@ class Filesystem extends \Symfony\Component\Filesystem\Filesystem implements Fil
 	 */
 	public function put($filename, $content)
 	{
-		return file_put_contents($filename, $content);
+		return file_put_contents($this->path($filename), $content);
 	}
 
 	/**
@@ -53,7 +53,7 @@ class Filesystem extends \Symfony\Component\Filesystem\Filesystem implements Fil
 	 */
 	public function directory($file)
 	{
-		return realpath(dirname($file));
+		return dirname($this->path($file));
 	}
 
 	/**
@@ -64,6 +64,8 @@ class Filesystem extends \Symfony\Component\Filesystem\Filesystem implements Fil
 	 */
 	public function getFileContentsFromDirectory($directory)
 	{
+		$directory = $this->path($directory);
+
 		$contents = array();
 
 		foreach (new RecursiveIteratorIterator (new RecursiveDirectoryIterator($directory)) as $filename)
@@ -71,7 +73,7 @@ class Filesystem extends \Symfony\Component\Filesystem\Filesystem implements Fil
 			if ($filename->isFile())
 			{
 				$relativePath = $this->makeRelativePath($filename, $directory);
-				$contents[$relativePath] = $this->get($filename);
+				$contents[$relativePath] = file_get_contents($filename);
 			}
 		}
 
@@ -88,5 +90,16 @@ class Filesystem extends \Symfony\Component\Filesystem\Filesystem implements Fil
 	public function makeRelativePath($path, $base)
 	{
 		return str_replace($base . '/', '', $path);
+	}
+
+	/**
+	 * Return the path wrapper (for testing purposes mainly)
+	 *
+	 * @param  string $path
+	 * @return string
+	 */
+	protected function path($path)
+	{
+		return $this->root . $path;
 	}
 }

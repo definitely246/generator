@@ -20,6 +20,12 @@ class Application extends \Symfony\Component\Console\Application
 	{
 		$config = $this->getConfigFile($currentDirectory, $pharDirectory);
 
+		if (!file_exists($config))
+		{
+			echo PHP_EOL . "Unable to open json file at $config" . PHP_EOL;
+			exit;
+		}
+
 		$generators = $this->generatorFactory->all($currentDirectory, $pharDirectory, $config);
 
 		foreach ($generators as $generator)
@@ -35,14 +41,14 @@ class Application extends \Symfony\Component\Console\Application
 	 */
 	protected function getConfigFile($currentDirectory, $pharDirectory)
 	{
-		$config = getopt("c:");
+		$config = $this->getOption('config');
 
-		if (count($config) == 0)
+		if (!$config)
 		{
-		 	return "{$pharDirectory}/generate.json";
-
+		 	return file_exists("{$currentDirectory}/generator.json") ?
+		 		"{$currentDirectory}/generator.json" :
+		 		"{$pharDirectory}/generator.json";
 		}
-		$config = reset($config);
 
 		if (strpos($config, '/') === 0)
 		{
@@ -50,5 +56,29 @@ class Application extends \Symfony\Component\Console\Application
 		}
 
 		return "{$currentDirectory}/$config";
+	}
+
+	/**
+	 * Get the option for the --config
+	 * if one exists. This lets users override
+	 * their config.json file at run time
+	 * if they want too...
+	 *
+	 * @return null|string
+	 */
+	protected function getOption($searchFor, $default = null)
+	{
+		$arguments = $_SERVER['argv'];
+		$searchFor = "--$searchFor=";
+
+		foreach ($arguments as $argument)
+		{
+			if (strpos($argument, $searchFor) === 0)
+			{
+				return substr($argument, strlen($searchFor));
+			}
+		}
+
+		return $default;
 	}
 }

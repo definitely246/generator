@@ -48,7 +48,7 @@ class ConfigFactory implements ConfigFactoryInterface
 
         foreach ($jsonConfig as $type => $json)
         {
-            $configs[$type] = $this->createFor($json, $type, $basePath, $scriptPath);
+            $configs[$type] = $this->createFor($json, $type, $basePath, $scriptPath, $configFile);
         }
 
         return $configs;
@@ -63,11 +63,11 @@ class ConfigFactory implements ConfigFactoryInterface
      * @param  string $script_path
      * @return GeneratorConfigInterface
      */
-    protected function createFor($json, $type, $base_path, $script_path)
+    protected function createFor($json, $type, $base_path, $script_path, $config_file)
     {
         $config = $this->objectCreator->create('Codesleeve\Generator\Support\Config');
 
-        $options = compact('type', 'base_path', 'script_path');
+        $options = compact('type', 'base_path', 'script_path', 'config_file');
 
         $generator = array_merge($this->defaults, $options, $json);
 
@@ -122,6 +122,14 @@ class ConfigFactory implements ConfigFactoryInterface
      * this configuration setup since it can change
      * based on where you are at.
      *
+     * Here is the pecking order
+     *
+     *  1. are templates an absolute path?
+     *  2. are templates relative to base_path?
+     *  3. are templates relative to config_file path?
+     *  4. are templates relative to script_path?
+     *  5. well, we tried our hardest
+     *
      * @param  array $generator
      * @return string
      */
@@ -141,6 +149,13 @@ class ConfigFactory implements ConfigFactoryInterface
         if ($this->file->exists("{$base}/{$templates}"))
         {
             return "{$base}/{$templates}";
+        }
+
+        $config = $this->file->directory($generator['config_file']);
+
+        if ($this->file->exists("{$config}/{$templates}"))
+        {
+            return "{$config}/{$templates}";
         }
 
         if ($this->file->exists("{$default}/{$templates}"))

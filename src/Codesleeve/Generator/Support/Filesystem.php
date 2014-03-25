@@ -2,6 +2,7 @@
 
 use RecursiveIteratorIterator, RecursiveDirectoryIterator;
 use Codesleeve\Generator\Interfaces\FilesystemInterface;
+use Codesleeve\Generator\Exceptions\FileNotFoundException;
 
 class Filesystem extends \Symfony\Component\Filesystem\Filesystem implements FilesystemInterface
 {
@@ -33,6 +34,11 @@ class Filesystem extends \Symfony\Component\Filesystem\Filesystem implements Fil
 	 */
 	public function get($file)
 	{
+		if (!$this->exists($this->path($file)))
+		{
+			throw new FileNotFoundException("File not found at $file");
+		}
+
 		return file_get_contents($this->path($file));
 	}
 

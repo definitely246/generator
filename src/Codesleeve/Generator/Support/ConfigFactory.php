@@ -98,7 +98,7 @@ class ConfigFactory implements ConfigFactoryInterface
         {
             $basename = basename($configFile);
 
-            throw new InvalidJsonFileException("Could not parse json from {$basename}" . PHP_EOL . "Message: " . json_last_error_msg());
+            throw new InvalidJsonFileException("Could not parse json from {$basename}" . PHP_EOL . "Message: " . \json_last_error_msg());
         }
 
         return $json;

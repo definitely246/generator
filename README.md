@@ -34,3 +34,11 @@ This flowchart might help with understanding how everything all comes together.
 ## License
 
 The codesleeve asset pipeline is open-source software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+
+## Tests
+
+If you want to see some pretty tests, then run tests run
+
+```php
+	vendor/bin/phpspec run
+```

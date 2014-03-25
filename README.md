@@ -33,7 +33,7 @@ This flowchart might help with understanding how everything all comes together.
 
 ## License
 
-The codesleeve asset pipeline is open-source software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+The codesleeve generator is open-source software licensed under the [MIT license](http://opensource.org/licenses/MIT)
 
 ## Tests
 

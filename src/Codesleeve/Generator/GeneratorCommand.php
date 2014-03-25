@@ -53,6 +53,8 @@ class GeneratorCommand extends BaseCommand implements Interfaces\GeneratorComman
     	$options = array(
     		'entity' => $input->getArgument('entity'),
     		'fields' => $input->getArgument('fields'),
+    		'yes' => $input->getOption('yes'),
+    		'quiet' => $input->getOption('quiet'),
     	);
 
 		// create variables from context with given $options
@@ -68,6 +70,6 @@ class GeneratorCommand extends BaseCommand implements Interfaces\GeneratorComman
 		$files = $parser->parse($templates, $variables);
 
 		// write out the parsed files using the file writer
-		$this->config->getWriter()->write($files, $output, $this->getHelperSet(), $input->getOption('yes'));
+		$this->config->getWriter()->write($files, $output, $this->getHelperSet(), $options);
     }
 }

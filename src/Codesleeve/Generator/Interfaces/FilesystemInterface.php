@@ -39,4 +39,12 @@ interface FilesystemInterface
 	 * @return string
 	 */
 	public function makeRelativePath($path, $base);
+
+	/**
+	 * Check for the existence of this given path
+	 *
+	 * @param  string 	$path
+	 * @return boolean
+	 */
+	public function exists($path);
 }

@@ -75,7 +75,7 @@ class ConfigFactory implements ConfigFactoryInterface
 
         $generator['parser'] = $this->objectCreator->create($generator['parser']);
 
-        $generator['writer'] = $this->objectCreator->create($generator['writer']);
+        $generator['writer'] = $this->objectCreator->create($generator['writer'], array($options['base_path']));
 
         $generator['templates'] = $this->getTemplates($generator);
 
@@ -87,8 +87,8 @@ class ConfigFactory implements ConfigFactoryInterface
     /**
      * Get the config from JSON
      *
-     * @param  string $configFile [description]
-     * @return string             [description]
+     * @param  string $configFile
+     * @return string
      */
     protected function getConfigFromJsonFile($configFile)
     {

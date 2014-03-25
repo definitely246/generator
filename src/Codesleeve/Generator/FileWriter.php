@@ -20,8 +20,9 @@ class FileWriter implements WriterInterface
 	 *
 	 * @param Filesystem $file
 	 */
-	public function __construct(FilesystemInterface $file = null)
+	public function __construct($basePath, FilesystemInterface $file = null)
 	{
+		$this->basePath = $basePath;
 		$this->file = $file ?: new Filesystem;
 	}
 
@@ -31,11 +32,46 @@ class FileWriter implements WriterInterface
 	 * @param  array  $files
 	 * @return void
 	 */
-	public function write(array $files, OutputInterface $output, HelperSet $helperSet)
+	public function write(array $files, OutputInterface $output, HelperSet $helperSet, $options = array())
 	{
 		foreach ($files as $filename => $content)
 		{
-			$this->file->put($filename, $content);
+			if ($this->yes($filename, $output, $helperSet, $options))
+			{
+				$this->file->put($filename, $content);
+			}
 		}
+	}
+
+	/**
+	 * If the user answers yes then we can override the file
+	 * or if the file doesn't exist then we will just answer
+	 * yes because we aren't overriding anything.
+	 *
+	 * @param  string 			$filename
+	 * @param  OutputInterface	$output
+	 * @param  HelperSet 		$helperSet
+	 * @return boolean
+	 */
+	protected function yes($filename, $output, $helperSet, $options)
+	{
+		if (!$this->file->exists($this->basePath . '/' . $filename))
+		{
+			return true;
+		}
+
+		if (isset($options['yes']) && $options['yes'] == true)
+		{
+			return true;
+		}
+
+		$dialog = $helperSet->get('dialog');
+
+		if ($dialog->askConfirmation($output,"<question>Would you like to override $filename? [y/N]</question>", false))
+		{
+			return true;
+		}
+
+		return false;
 	}
 }

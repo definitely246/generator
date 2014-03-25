@@ -11,5 +11,5 @@ use Symfony\Component\Console\Helper\HelperSet;
 
 interface WriterInterface
 {
-	public function write(array $files, OutputInterface $output, HelperSet $helperSet);
+	public function write(array $files, OutputInterface $output, HelperSet $helperSet, $options = array());
 }

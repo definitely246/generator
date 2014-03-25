@@ -37,7 +37,8 @@ class GeneratorCommand extends BaseCommand implements Interfaces\GeneratorComman
 			 ->setDescription($description)
  			 ->addArgument('entity', InputArgument::REQUIRED, 'Entity we will be generating for')
  			 ->addArgument('fields', InputArgument::OPTIONAL, 'Fields for this given entity')
-			 ->addOption('config', null, InputOption::VALUE_REQUIRED, 'Use your own generate.json files');
+			 ->addOption('config', null, InputOption::VALUE_REQUIRED, 'Use your own generate.json files')
+			 ->addOption('yes', null, InputOption::VALUE_NONE, 'Automatically answer yes to any prompts');
     }
 
     /**
@@ -67,6 +68,6 @@ class GeneratorCommand extends BaseCommand implements Interfaces\GeneratorComman
 		$files = $parser->parse($templates, $variables);
 
 		// write out the parsed files using the file writer
-		$this->config->getWriter()->write($files, $output, $this->getHelperSet());
+		$this->config->getWriter()->write($files, $output, $this->getHelperSet(), $input->getOption('yes'));
     }
 }

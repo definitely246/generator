@@ -3,6 +3,8 @@
 use Codesleeve\Generator\Interfaces\WriterInterface;
 use Codesleeve\Generator\Interfaces\FilesystemInterface;
 use Codesleeve\Generator\Support\Filesystem;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Helper\HelperSet;
 
 class FileWriter implements WriterInterface
 {
@@ -29,7 +31,7 @@ class FileWriter implements WriterInterface
 	 * @param  array  $files
 	 * @return void
 	 */
-	public function write(array $files)
+	public function write(array $files, OutputInterface $output, HelperSet $helperSet)
 	{
 		foreach ($files as $filename => $content)
 		{

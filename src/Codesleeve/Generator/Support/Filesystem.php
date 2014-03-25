@@ -42,6 +42,13 @@ class Filesystem extends \Symfony\Component\Filesystem\Filesystem implements Fil
 	 */
 	public function put($filename, $content)
 	{
+		$directory = $this->directory($filename);
+
+		if (!$this->exists($directory))
+		{
+			$this->mkdir($directory);
+		}
+
 		return file_put_contents($this->path($filename), $content);
 	}
 

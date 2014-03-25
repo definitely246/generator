@@ -51,4 +51,9 @@ class FilesystemSpec extends ObjectBehavior
     {
         $this->makeRelativePath('vfs://root/folder/test.txt', 'vfs://root/folder')->shouldBe('test.txt');
     }
+
+    function it_can_put_files_into_directories_that_do_not_exist_yet()
+    {
+        $this->put('folder/does/not/exist/test1.txt', 'did it work?');
+    }
 }

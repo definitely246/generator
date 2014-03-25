@@ -2,7 +2,10 @@
 
 use spec\ObjectBehavior;
 use Prophecy\Argument;
+
 use Codesleeve\Generator\Interfaces\FilesystemInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Helper\HelperSet;
 
 class FileWriterSpec extends ObjectBehavior
 {
@@ -11,13 +14,13 @@ class FileWriterSpec extends ObjectBehavior
        $this->shouldHaveType('Codesleeve\Generator\FileWriter');
     }
 
-    function it_can_write_files(FilesystemInterface $file)
+    function it_can_write_files(FilesystemInterface $file, OutputInterface $output, HelperSet $helperSet)
     {
         $this->beConstructedWith($file);
 
         $file->put('test/thing.txt', 'content')->shouldBeCalled();
 
-        $this->write(array('test/thing.txt' => "content"));
+        $this->write(array('test/thing.txt' => "content"), $output, $helperSet);
     }
 
     function it_should_ask_when_overriding_files(FilesystemInterface $file)

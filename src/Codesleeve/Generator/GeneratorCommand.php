@@ -36,7 +36,7 @@ class GeneratorCommand extends BaseCommand implements Interfaces\GeneratorComman
         $this->setName($name)
 			 ->setDescription($description)
  			 ->addArgument('entity', InputArgument::REQUIRED, 'Entity we will be generating for')
- 			 ->addArgument('fields', InputArgument::OPTIONAL, 'Fields for this given entity')
+ 			 ->addArgument('fields', InputArgument::IS_ARRAY, 'Fields for this given entity')
 			 ->addOption('config', null, InputOption::VALUE_REQUIRED, 'Use your own generate.json files')
 			 ->addOption('yes', null, InputOption::VALUE_NONE, 'Automatically answer yes to any prompts');
     }

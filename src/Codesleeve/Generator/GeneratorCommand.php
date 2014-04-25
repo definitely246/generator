@@ -60,6 +60,9 @@ class GeneratorCommand extends BaseCommand implements Interfaces\GeneratorComman
 		// create variables from context with given $options
 		$variables = $this->config->getContext()->context($options);
 
+		// assign variables that have been manually set in config file
+		$variables = array_merge($variables, $this->config->getVariables());
+
 		// fetch the template structure and contents
 		$templates = $this->config->getTemplates();
 

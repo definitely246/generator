@@ -40,6 +40,11 @@ class TransformSpec extends ObjectBehavior
         $this->transformPluralCamel('entity', 'user_settings')->shouldBe(array('entities', 'userSettings'));
     }
 
+    function it_can_transform_into_original()
+    {
+        $this->transformToOriginal('entity', 'user_setTings')->shouldBe(array('entity_unmodified', 'user_setTings'));
+    }
+
     function it_can_transform_a_string_into_many_different_transforms_all_at_once()
     {
         $transform = $this->transformAll(array(), 'entity', 'userSetting');
@@ -49,7 +54,7 @@ class TransformSpec extends ObjectBehavior
         $transform->shouldHavePair('_entities_', 'user_settings');
         $transform->shouldHavePair('entity', 'userSetting');
         $transform->shouldHavePair('entities', 'userSettings');
-
+        $transform->shouldHavePair('entity_unmodified', 'userSetting');
     }
 
 }

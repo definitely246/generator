@@ -14,6 +14,7 @@ class Transform
 		'transformSingularStudly',
 		'transformSingularSnake',
 		'transformSingularCamel',
+		'transformToOriginal',
 	);
 
 	/**
@@ -88,5 +89,11 @@ class Transform
 		return array(Str::plural(Str::camel($key)), Str::plural(Str::camel($value)));
 	}
 
+	/**
+	 * Creates an original_$key with unmodified value
+	 */
+    public function transformToOriginal($key, $value)
+    {
+    	return array($key . '_unmodified', $value);
+    }
 }
-

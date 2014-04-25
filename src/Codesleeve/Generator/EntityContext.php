@@ -6,6 +6,14 @@ use Codesleeve\Generator\Interfaces\ContextInterface;
 class EntityContext implements ContextInterface
 {
 	/**
+	 * List of names that are not really attributes when we search
+	 * through fields
+	 *
+	 * @var array
+	 */
+	static protected $nonAttributes = array('belongsto', 'hasmany', 'belongstomany');
+
+	/**
 	 * Dependency setup in constructor
 	 */
 	public function __construct(Transfrom $transformer = null)
@@ -24,7 +32,7 @@ class EntityContext implements ContextInterface
 
 		$this->entity = $parameters['entity'];
 
-		$this->fields = isset($parameters['fields']) ? $parameters['fields'] : '';
+		$this->fields = isset($parameters['fields']) ? $parameters['fields'] : array();
 
 		return $this->populateContext();
 	}
@@ -40,94 +48,126 @@ class EntityContext implements ContextInterface
 
 		$context = $this->transformer->transformAll($context, 'entity', $this->entity);
 
-		// $this->attributes();
+		$context = $this->attributes($context);
 
-		// $this->belongsTo();
+		$context = $this->belongsTo($context);
 
-		// $this->hasMany();
+		$context = $this->hasMany($context);
 
-		// $this->belongsToMany();
+		$context = $this->belongsToMany($context);
 
 		return $context;
 	}
 
 	/**
 	 * Model could have attributes attached to it
+	 *
 	 */
-	// protected function attributes()
-	// {
-	// 	$attributes = array();
+	protected function attributes($context)
+	{
+		$attributes = array();
 
-	// 	foreach ($this->attributes as $attribute)
-	// 	{
-	// 		list($name, $type, $index) = $this->parseAttribute($attribute);
+		foreach ($this->fields as $field)
+		{
+			list($name, $type, $index) = $this->parseField($field);
 
-	// 		if ($this->isAttribute($name, $type))
-	// 		{
-	// 			$attributes[] = compact('name', 'type', 'index');
-	// 		}
-	// 	}
+			if ($this->isAttribute($name, $type))
+			{
+				$attribute = $this->transformer->transformAll(array(), 'name', $name);
 
-	// 	$this->context['attributes'] = $attributes;
-	// }
+				$attribute['type'] = $type;
+				$attribute['index'] = $index;
+				$attributes[] = $attribute;
+			}
+		}
 
-	// /**
-	//  * Model could have belongsTo relationships attached to it
-	//  */
-	// protected function belongsTo()
-	// {
-	// 	$belongsTo = array();
+		$context['attributes'] = $attributes;
 
-	// 	foreach ($this->attributes as $attribute)
-	// 	{
-	// 		list($name, $type, $index) = $this->parseAttribute($attribute);
+		return $context;
+	}
 
-	// 		if (strtolower($type) === "belongsto")
-	// 		{
-	// 			$belongsTo[] = compact('name', 'type', 'index');
-	// 		}
-	// 	}
+	/**
+	 * Model could have belongsTo relationships attached to it
+	 */
+	protected function belongsTo($context)
+	{
+		$context['belongsTo'] = $this->findRelationshipByType('belongsTo');
 
-	// 	$this->context['belongsTo'] = $belongsTo;
-	// }
+		return $context;
+	}
 
-	// *
-	//  * Model could have hasMany relationships attached to it
+	/**
+	 * Model could have hasMany relationships attached to it
+	 *
+	 * @return boolean
+	 */
+	protected function hasMany($context)
+	{
+		$context['hasMany'] = $this->findRelationshipByType('hasMany');
 
-	// protected function hasMany()
-	// {
-	// 	$hasMany = array();
+		return $context;
+	}
 
-	// 	foreach ($this->attributes as $attribute)
-	// 	{
-	// 		list($name, $type, $index) = $this->parseAttribute($attribute);
+	/**
+	 * Model could have belongsToMany relationships attached to it
+	 */
+	protected function belongsToMany($context)
+	{
+		$context['belongsToMany'] = $this->findRelationshipByType('belongsToMany');
 
-	// 		if (strtolower($type) === "hasmany")
-	// 		{
-	// 			$hasMany[] = compact('name', 'type', 'index');
-	// 		}
-	// 	}
+		return $context;
+	}
 
-	// 	$this->context['hasMany'] = $hasMany;
-	// }
+	/**
+	 * Turns a string of ':' fields and turns into Fields
+	 *
+	 * @param  string $field
+	 * @return array(3)
+	 */
+	protected function parseField($field)
+	{
+		$fields = explode(':', $field);
 
-	// /**
-	//  * Model could have belongsToMany relationships attached to it
-	//  */
-	// protected function belongsToMany()
-	// {
-	// 	$belongsToMany = array();
+		return array_merge($fields, array('', '', ''));
+	}
 
-	// 	foreach ($this->attributes as $attribute)
-	// 	{
-	// 		list($name, $type, $index) = $this->parseAttribute($attribute);
+	/**
+	 * Not every field is an attribute, we also support
+	 * relationship types like 'belongsTo', 'hasMany', and 'belongsToMany'
+	 *
+	 * @param  string  $name
+	 * @param  string  $type
+	 * @return boolean
+	 */
+	protected function isAttribute($name, $type)
+	{
+		return !in_array(strtolower($name), static::$nonAttributes);
+	}
 
-	// 		if (strtolower($type) === "belongstomany")
-	// 		{
-	// 			$belongsToMany[] = compact('name', 'type', 'index');
-	// 		}
-	// 	}
+	/**
+	 * Searches our fields array and tries to find relationships with
+	 * the given type
+	 *
+	 * @param  string $type
+	 * @return array
+	 */
+	protected function findRelationshipByType($relationshipType)
+	{
+		$results = array();
 
-	// 	$this->context['belongsToMany'] = $belongsToMany;
-	// }
+		foreach ($this->fields as $field)
+		{
+			list($name, $type, $index) = $this->parseField($field);
+
+			if (strtolower($name) === strtolower($relationshipType))
+			{
+				foreach (explode(',', $type) as $relationship)
+				{
+					$results[] = $this->transformer->transformAll(array(), 'name', $relationship);
+				}
+			}
+		}
+
+		return $results;
+	}
 }

@@ -54,4 +54,29 @@ class EntityContextSpec extends ObjectBehavior
         $context->shouldHavePair('Entities', 'UserSettings');
         $context->shouldHavePair('Entity', 'UserSetting');
     }
+
+    function it_can_give_me_attributes()
+    {
+        $options = array('entity' => 'UserSettings', 'fields' => array('stripe_id:integer:unique', 'backup_email:string'));
+        $context = $this->context($options);
+
+        $context['attributes'][0]['name_unmodified']->shouldBe('stripe_id');
+        $context['attributes'][1]['name_unmodified']->shouldBe('backup_email');
+
+        $context['attributes'][0]['type']->shouldBe('integer');
+        $context['attributes'][1]['type']->shouldBe('string');
+
+        $context['attributes'][0]['index']->shouldBe('unique');
+        $context['attributes'][1]['index']->shouldBe('');
+    }
+
+    // function it_can_give_me_belongs_to_relationship()
+    // {
+    //     $options = array('entity' => 'UserSettings', 'fields' => array('belongsTo:userAccounts'));
+    //     $context = $this->context($options);
+
+    //     $context->shouldHavePair('belongsTo', array(
+    //         array('name' => 'userAccounts', 'Name' => 'UserAccounts', '_name_' => 'user_accounts', 'original' => 'userAccounts'),
+    //     ));
+    // }
 }

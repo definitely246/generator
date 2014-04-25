@@ -91,4 +91,8 @@ class ConfigSpec extends ObjectBehavior
 		$this->shouldThrow('Codesleeve\Generator\Exceptions\InvalidGeneratorCommandException')->during('generator');
 	}
 
+	function it_can_get_manual_variables()
+	{
+		$this->getVariables()->shouldBe(array());
+	}
 }

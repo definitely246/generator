@@ -234,4 +234,14 @@ class Config implements GeneratorConfigInterface
 			$this->all[$name] = $value;
 		}
 	}
+
+	/**
+	 * Access any custom variables on this config
+	 *
+	 * @return array
+	 */
+    public function getVariables()
+    {
+    	return isset($this->all['variables']) ? $this->all['variables'] : array();
+    }
 }

@@ -41,7 +41,10 @@ class TwigParser implements ParserInterface
 	{
 		foreach ($variables as $key => $value)
 		{
-			$filename = str_replace("__{$key}__", $value, $filename);
+			if (is_string($value))
+			{
+				$filename = str_replace("__{$key}__", $value, $filename);
+			}
 		}
 
 		return $filename;

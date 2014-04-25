@@ -9,4 +9,5 @@ before_script:
   - curl -s http://getcomposer.org/installer | php
   - php composer.phar install --dev
 
+# vendor/bin/phpspec run
 script: echo 'okay'
